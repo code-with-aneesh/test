@@ -7,31 +7,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    <link id="themeStylesheet" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Dashboard</title>
+    <style>
+        .todo-text {
+            text-decoration: none;
+        }
+
+        .todo-text.done {
+            text-decoration: line-through;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-dark text-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href={{url_for('index')}}>Home</a>
+        <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-    
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard <span
+                            class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Link</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Dropdown
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -49,11 +60,33 @@
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+            <button id="themeToggle" class="btn btn-outline-light ml-2">Light Theme</button>
         </div>
     </nav>
-    <h1>Hello, world!</h1>
-    <h1>{{user['id']}} the great user {{user['username']}}</h1>
-    <button><a href={{url_for('logout')}}>logout</a></a></button>
+    <div class="container mt-4">
+        <h1>Welcome, {{ user['username'] }}!</h1>
+        <p>User ID: {{ user['user_id'] }}</p>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+
+        <h2 class="mt-4">To-Do List</h2>
+        <form action="{{ url_for('add_todo') }}" method="POST" class="form-inline mb-3">
+            <input type="text" name="todo" class="form-control mr-2" placeholder="New to-do" required>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+        <ul class="list-group" id="todoList">
+            {% for todo in todos %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="todo-text {% if todo['done'] %}done{% endif %}">{{ todo['text'] }}</span>
+                <div>
+                    <a href="{{ url_for('toggle_todo', todo_id=todo['_id']) }}"
+                        class="btn btn-sm btn-secondary">Toggle</a>
+                    <a href="{{ url_for('delete_todo', todo_id=todo['_id']) }}" class="btn btn-sm btn-danger">Delete</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -65,6 +98,48 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const todoList = document.getElementById('todoList');
+
+            // Check for saved user preference, if any, on load of the website
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            if (currentTheme === 'light') {
+                body.classList.remove('bg-dark', 'text-white');
+                body.classList.add('bg-light', 'text-dark');
+                themeToggle.textContent = 'Dark Theme';
+                updateTodoTextColor('text-dark');
+            } else {
+                updateTodoTextColor('text-white');
+            }
+
+            themeToggle.addEventListener('click', function () {
+                if (body.classList.contains('bg-dark')) {
+                    body.classList.remove('bg-dark', 'text-white');
+                    body.classList.add('bg-light', 'text-dark');
+                    themeToggle.textContent = 'Dark Theme';
+                    localStorage.setItem('theme', 'light');
+                    updateTodoTextColor('text-dark');
+                } else {
+                    body.classList.remove('bg-light', 'text-dark');
+                    body.classList.add('bg-dark', 'text-white');
+                    themeToggle.textContent = 'Light Theme';
+                    localStorage.setItem('theme', 'dark');
+                    updateTodoTextColor('text-white');
+                }
+            });
+
+            function updateTodoTextColor(colorClass) {
+                const todoTexts = todoList.getElementsByClassName('todo-text');
+                for (let i = 0; i < todoTexts.length; i++) {
+                    todoTexts[i].classList.remove('text-dark', 'text-white');
+                    todoTexts[i].classList.add(colorClass);
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
