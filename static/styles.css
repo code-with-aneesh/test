@@ -1,4 +1,111 @@
-.gradient-custom {
-    /* fallback for old browsers */
-    background: #6a11cb;
+/* styles.css */
+
+/* General Styles */
+body {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+/* To-Do List Styles */
+.todo-text {
+    text-decoration: none;
+}
+
+.todo-text.done {
+    text-decoration: line-through;
+}
+
+/* Theme Toggle Button */
+#themeToggle {
+    margin-left: 10px;
+}
+
+/* Custom ocean theme */
+.ocean-bg {
+    background-image: linear-gradient(45deg, #00bcd4, #1e2d45);
+}
+
+.ocean-text {
+    color: #f1f9ff;
+}
+
+.ocean-btn {
+    background-color: #006f87;
+    color: white;
+    border-radius: 0.375rem;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.ocean-btn:hover {
+    background-color: #005f72;
+}
+
+/* Nature-Themed Styles */
+.bg-green-100 {
+    background-color: #f0fdf4;
+}
+
+.text-green-700 {
+    color: #047857;
+}
+
+.text-green-800 {
+    color: #065f46;
+}
+
+.bg-green-600 {
+    background-color: #059669;
+}
+
+.bg-green-700 {
+    background-color: #047857;
+}
+
+.border-green-300 {
+    border-color: #d1fae5;
+}
+
+.border-green-400 {
+    border-color: #a7f3d0;
+}
+
+.bg-green-50 {
+    background-color: #ecfdf5;
+}
+
+.focus\:ring-green-500:focus {
+    --tw-ring-color: #10b981;
+}
+
+.focus\:border-green-500:focus {
+    border-color: #10b981;
+}
+
+body.bg-dark {
+    background-color: #343a40 !important;
+    color: #ffffff !important;
+}
+
+body.bg-light {
+    background-color: #f8f9fa !important;
+    color: #343a40 !important;
+}
+
+.todo-text {
+    text-decoration: none;
+    color: #000000;
+    /* Set text color to black */
+}
+
+.todo-text.done {
+    text-decoration: line-through;
 }

@@ -10,17 +10,9 @@
     <link id="themeStylesheet" rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
     <title>Dashboard</title>
-    <style>
-        .todo-text {
-            text-decoration: none;
-        }
-
-        .todo-text.done {
-            text-decoration: line-through;
-        }
-    </style>
 </head>
 
 <body class="bg-dark text-white">
@@ -110,9 +102,6 @@
                 body.classList.remove('bg-dark', 'text-white');
                 body.classList.add('bg-light', 'text-dark');
                 themeToggle.textContent = 'Dark Theme';
-                updateTodoTextColor('text-dark');
-            } else {
-                updateTodoTextColor('text-white');
             }
 
             themeToggle.addEventListener('click', function () {
@@ -121,23 +110,13 @@
                     body.classList.add('bg-light', 'text-dark');
                     themeToggle.textContent = 'Dark Theme';
                     localStorage.setItem('theme', 'light');
-                    updateTodoTextColor('text-dark');
                 } else {
                     body.classList.remove('bg-light', 'text-dark');
                     body.classList.add('bg-dark', 'text-white');
                     themeToggle.textContent = 'Light Theme';
                     localStorage.setItem('theme', 'dark');
-                    updateTodoTextColor('text-white');
                 }
             });
-
-            function updateTodoTextColor(colorClass) {
-                const todoTexts = todoList.getElementsByClassName('todo-text');
-                for (let i = 0; i < todoTexts.length; i++) {
-                    todoTexts[i].classList.remove('text-dark', 'text-white');
-                    todoTexts[i].classList.add(colorClass);
-                }
-            }
         });
     </script>
 </body>
